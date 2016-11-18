@@ -1,0 +1,89 @@
+<!-- <!-- views/profile.ejs -->
+<% include ../partials/head %>
+<body>
+<header>
+    <% include ../partials/header %>
+</header>
+
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        <a href="/polls" class="btn btn-default btn-sm">Polls</a>
+    </div>
+
+    <div class="row">
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-4">
+            <div class="well">
+                <h3><span class="fa fa-user"></span> Local</h3>
+
+                <% if (user.local.email) { %>
+                <p>
+                    <!--<strong>id</strong>: <%= user._id %><br>-->
+                    <strong>email</strong>: <%= user.local.email %><br>
+                    <strong>password</strong>: <%= user.local.password %>
+                </p>
+
+                <a href="/unlink/local" class="btn btn-default">Unlink</a>
+                <% } else { %>
+                <a href="/connect/local" class="btn btn-default">Connect Local</a>
+                <% } %>
+
+            </div>
+        </div>
+
+        <!-- FACEBOOK INFORMATION -->
+        <div class="col-sm-4">
+            <div class="well">
+                <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
+
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (user.facebook.token) { %>
+                <p>
+                    <!--<strong>id</strong>: <%= user.facebook.id %><br>-->
+                    <!--<strong>token</strong>: <%= user.facebook.token %><br>-->
+                    <strong>email</strong>: <%= user.facebook.email %><br>
+                    <strong>name</strong>: <%= user.facebook.name %><br>
+                </p>
+
+                <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+                <% } else { %>
+                <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
+                <% } %>
+
+            </div>
+        </div>
+
+        <!-- GOOGLE INFORMATION -->
+        <div class="col-sm-4">
+            <div class="well">
+                <h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
+
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (user.google.token) { %>
+                <p>
+                    <!--<strong>id</strong>: <%= user.google.id %><br>
+                    <strong>token</strong>: <%= user.google.token %><br>-->
+                    <strong>email</strong>: <%= user.google.email %><br>
+                    <strong>name</strong>: <%= user.google.name %>
+                </p>
+
+                <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+                <% } else { %>
+                <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+</body>
+</html>

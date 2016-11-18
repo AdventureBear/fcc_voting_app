@@ -1,0 +1,35 @@
+<% include ../../partials/head %>
+<body>
+
+<header>
+    <% include ../../partials/header %>
+</header>
+
+<div class="container">
+
+    <div class="text-center">
+        <div id="form_container">
+                <div class="col-md-6">
+                    <h2>Add a poll</h2>
+                    <p>Add a poll here. Poll Question and at least 2  options required. </p>
+                    <hr>
+                    <form action="/poll/new" method="post">
+                        <div class="form-group">
+                            <label for="pollTitle">Title</label>
+                            <input type="text" class="form-control" id="pollTitle" name="pollTitle" placeholder="Ex. Google or Apple?">
+                        </div>
+                        <div class="form-group">
+                            <label for="pollAnswers">Answers</label>
+                            <input type="text" class="form-control" id="pollAnswers" name="pollAnswers" placeholder="Answers separated by a comma (,), ex. Google, Apple">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="test">Add Poll</button>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <% include ../../partials/footer %>
+</footer>
+</body>
+</html>

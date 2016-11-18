@@ -1,0 +1,30 @@
+<% include ../../partials/head %>
+
+<body>
+
+<header>
+    <% include ../../partials/header %>
+</header>
+
+
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-tasks"></span> Polls Main Page</h1>
+        <h2>All Polls</h2>
+        <ul>
+            <% polls.forEach(function(poll) { %>
+            <li><%= poll.title %></li>
+            <% }); %>
+        </ul>
+
+
+        <a href="/poll/new" class="btn btn-default btn-sm">New Poll</a>
+    </div>
+
+</div>
+<footer>
+    <% include ../../partials/footer %>
+</footer>
+</body>
+</html>
