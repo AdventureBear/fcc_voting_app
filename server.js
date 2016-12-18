@@ -5,6 +5,8 @@ var dotenv = require('dotenv');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
+//var Chartist = require('chartist');
+
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -17,9 +19,14 @@ app.use(morgan('dev')); //log every request to console
 app.use(cookieParser()); //read cookies
 app.use(bodyParser()); //read forms
 
+//serve public files from public folder
+app.use('/public', express.static('public'));
+
 //templating engines
 //app.use(express.static('.'));
 app.set('view engine', 'ejs'); //set up ejs for templating
+
+
 
 app.set('port', (process.env.PORT || 5000));
 dotenv.config();

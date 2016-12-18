@@ -8,13 +8,15 @@
 
 
 <div class="container">
-
     <div class="page-header text-center">
-        <h1><span class="fa fa-tasks"></span> Polls Main Page</h1>
+        <h1><span class="fa fa-tasks"></span>Polls Main Page</h1>
+
         <h2>All Polls</h2>
-        <ul>
+        <ul class="list-group">
             <% polls.forEach(function(poll) { %>
-            <li><%= poll.title %></li>
+            <a href="/poll/<%= poll._id %> ">
+                <li class="list-group-item"><%= poll.title %></li>
+            </a>
             <% }); %>
         </ul>
 

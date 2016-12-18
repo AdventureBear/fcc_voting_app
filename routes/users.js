@@ -11,6 +11,14 @@ module.exports = function(app, passport) {
     res.render('pages/index.ejs'); // load the index.ejs file
   });
 
+  //
+  //  ABOUT PAGE (with user stories)
+  //
+  app.get('/about', function(req, res) {
+    res.render('pages/about.ejs'); // load the index.ejs file
+  });
+
+
   // =====================================
   // LOGIN ===============================
   // =====================================
