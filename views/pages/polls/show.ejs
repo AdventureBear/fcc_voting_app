@@ -14,39 +14,40 @@
                 <% poll.options.forEach(function(option) { %>
                 <input type="radio" name="option" value="<%= option.desc %>"> <%= option.desc %><br>
                 <% }); %>
+
+                <% if (user) { %>
                 <input type="text" name="newOption" placeholder="New Option" value=""><br>
+                <% } %>
+
                 <input class = "btn btn-danger" type="submit" value="Vote">
                 </form>
         </div>
 
         <div class="col-md-8">
-            <h2>Chart goes here</h2>
-            <canvas id="myChart" width="400" height="400"></canvas>
+            <h2><%= poll.title %></h2>
+            <canvas id="myChart" width="300" height="200"></canvas>
             <script>
+
+            var poll = <%- JSON.stringify(poll) %>;
+            var desc = [], votes = [];
+            poll.options.forEach(function(poll){
+                desc.push(poll.desc);
+                votes.push(poll.votes);
+            });
+            var palettes = ["BuGn","BuPu","GnBu","OrRd","PuBu","PuBuGn","PuRd","RdPu","YlGn","YlGnBu","YlOrBr","YlOrRd"];
+            var colorScheme = palettes[Math.floor(Math.random() * palettes.length)]
+            var colorScale = chroma.scale(colorScheme).colors(desc.length);
+
             var ctx = document.getElementById("myChart");
+
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                    labels: desc,
                     datasets: [{
                         label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
+                        data: votes,
+                        backgroundColor: colorScale,
                         borderWidth: 1
                     }]
                 },
@@ -61,18 +62,11 @@
                 }
             });
 
-           
-            console.log("insdie the script tags ?")
-               </script>
-            <%  var theUrl = "/results/" + poll._id %>
-            <% console.log("Am i on server or client side ?") %>
-            <%  //chartResults(poll._id) %>
-            <b>Here's the URL: <%= theUrl %></b>
-            <ul>
-                <% poll.options.forEach(function(option) { %>
-                <li><%= option.desc %>: <%= option.votes %></li>
-                <% }); %>
-            </ul>
+
+
+            console.log(desc, votes, colorScheme);
+
+            </script>
         </div>
     </div>
 
@@ -80,6 +74,7 @@
 <footer>
     <% include ../../partials/footer %>
 </footer>
-<!--<script src="../../../public/js/chartPoll.js"></script>-->
+
+
 </body>
 </html>

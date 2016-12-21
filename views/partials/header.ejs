@@ -16,5 +16,18 @@
             <li><a href="/polls">Polls</a></li>
         </ul>
 
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/dashboard">Welcome,
+                    <% if (!user) { %>
+                Guest
+            <% } else if (user.google.token) { %>
+                 <%= user.google.name.split(" ")[0] %>
+            <% } else if (user.facebook.token) { %>
+                <%= user.facebook.name.split(" ")[0] %>
+            <% } %>
+            </a></li>
+        </ul>
+
     </div>
 </nav>

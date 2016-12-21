@@ -4,18 +4,41 @@
 // app/routes.js
 module.exports = function(app, passport) {
 
+//sends user object of logged in, otherwise
+//
+//var currentUser = function(req, res ,next){
+//    //if user is authenticated, carry on
+//    if (req.isAuthenticated()) {
+//      next();
+//    } else {
+//      //otherwise set the user object name/id to "guest"
+//      req.guest = "Guest";
+//      next();
+//    }
+//  };
+//
+//  app.use(currentUser);
+
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
   app.get('/', function(req, res) {
-    res.render('pages/index.ejs'); // load the index.ejs file
+    console.log(req);
+
+    res.render('pages/index.ejs', {
+      user : req.user  // get the user out of session and pass to template
+
+    }); // load the index.ejs file
   });
 
   //
   //  ABOUT PAGE (with user stories)
   //
   app.get('/about', function(req, res) {
-    res.render('pages/about.ejs'); // load the index.ejs file
+    res.render('pages/about.ejs', {
+      user : req.user  // get the user out of session and pass to template
+
+    }); // load the index.ejs file
   });
 
 
@@ -57,8 +80,16 @@ module.exports = function(app, passport) {
     failureFlash : true // allow flash messages
   }));
 
-
-
+  // =====================================
+  // DASHBOARD SECTION =====================
+  // =====================================
+  // we will want this protected so you have to be logged in to visit
+  // we will use route middleware to verify this (the isLoggedIn function)
+  app.get('/dashboard', isLoggedIn, function(req,res){
+    res.render('pages/dashboard.ejs', {
+      user: req.user
+    });
+  });
 
 
   // =====================================
@@ -138,8 +169,6 @@ module.exports = function(app, passport) {
     }));
 
 
-
-
   // google ---------------------------------
 
   // send to google to do the authentication
@@ -200,3 +229,4 @@ function isLoggedIn(req, res, next) {
   // if they aren't redirect them to the home page
   res.redirect('/');
 }
+

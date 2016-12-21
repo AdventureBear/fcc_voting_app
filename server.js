@@ -21,6 +21,7 @@ app.use(bodyParser()); //read forms
 
 //serve public files from public folder
 app.use('/public', express.static('public'));
+app.use('/client',express.static('bower_components'));
 
 //templating engines
 //app.use(express.static('.'));
