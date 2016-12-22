@@ -5,8 +5,8 @@
 
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
-                <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
-                FCC Polling App - Full Stack Development
+                <span class="glyphicon glyphicon glyphicon-check"></span>
+                Votease
             </a>
         </div>
 
@@ -25,7 +25,9 @@
                  <%= user.google.name.split(" ")[0] %>
             <% } else if (user.facebook.token) { %>
                 <%= user.facebook.name.split(" ")[0] %>
-            <% } %>
+            <% } else {%>
+                    <%= user.local.email %>
+                    <% } %>
             </a></li>
         </ul>
 

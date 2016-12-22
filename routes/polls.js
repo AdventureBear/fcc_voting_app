@@ -12,17 +12,39 @@ module.exports = function(app, passport) {
   // POLL HOME PAGE () ========
   // =====================================
   app.get('/polls', function (req, res) {
-    Poll.find({}, function (err, polls) {
+
+      Poll.find({}, function (err, polls) {
+        if (err) return console.error(err);
+
+        Poll.find({
+          ownerID: req.user_id
+        }, function (err, myPolls) {
+          if (err) return console.error(err);
+
+          console.log(polls, myPolls);
+          res.render('pages/polls/index.ejs', {
+            polls: polls,
+            myPolls: myPolls,
+            user : req.user  // get the user out of session and pass to template
+          }); // load the index.ejs file
+        });
+      });
+  });
+
+  app.get('/poll/user/:id', function(req,res){
+    console.log(req.params.id);
+
+    Poll.find({
+      ownerID:  req.params.id
+    }, function (err, polls) {
       if (err) return console.error(err);
-      console.log(polls);
       res.render('pages/polls/index.ejs', {
         polls: polls,
         user : req.user  // get the user out of session and pass to template
       }); // load the index.ejs file
     });
-
-
   });
+
 
   app.get('/poll/new', isLoggedIn, function (req, res) {
     res.render('pages/polls/add.ejs', {

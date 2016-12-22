@@ -11,17 +11,29 @@
     <div class="page-header text-center">
         <h1><span class="fa fa-tasks"></span>Polls Main Page</h1>
 
-        <h2>All Polls</h2>
-        <ul class="list-group">
-            <% polls.forEach(function(poll) { %>
-            <a href="/poll/<%= poll._id %> ">
-                <li class="list-group-item"><%= poll.title %></li>
-            </a>
-            <% }); %>
-        </ul>
 
+        <a href="/polls"><button class="btn btn-default btn-sm">All Polls</button></a>
+        <% if (!user) { %>
+        <a href="/"><button class="btn btn-default btn-sm">Register to Make Your Own Poll</button></a>
+        <% } else  { %>
+        <a href="/poll/user/<%= user._id %>"><button class="btn btn-default btn-sm">My Polls</button></a>
+        <% } %>
 
         <a href="/poll/new" class="btn btn-default btn-sm">New Poll</a>
+
+        <div class="all-polls">
+            <h2>All Polls</h2>
+            <ul class="list-group">
+                <% polls.forEach(function(poll) { %>
+                <a href="/poll/<%= poll._id %> ">
+                    <li class="list-group-item"><%= poll.title %></li>
+                </a>
+                <% }); %>
+            </ul>
+        </div>
+
+
+
     </div>
 
 </div>
