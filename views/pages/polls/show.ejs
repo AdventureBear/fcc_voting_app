@@ -85,13 +85,17 @@
 <script>
         var del_btn = document.getElementById("del-btn");
         del_btn.addEventListener("click", function(e) {
-            window.location.href = "/polls";
-            console.log("response text", this.responseText);
+
             var poll = <%- JSON.stringify(poll) %>;
-            var oReq = new XMLHttpRequest();
-            oReq.open("DELETE", "/poll/" + poll._id);
-           //
-            oReq.send();
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "/poll/" + poll._id);
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    window.location.href = "/polls";
+                }
+            };
+            xhr.send();
 
 
             //make XMLHttpRequest to delete the poll here
