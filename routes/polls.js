@@ -70,6 +70,32 @@ module.exports = function(app, passport) {
 
   });
 
+  app.delete('/poll/:id', function(req,res){
+    //var id = req.params.id;
+    Poll.remove({
+      _id: req.params.id
+    }, function(err, poll){
+      if (err)
+        return console.error(err);
+      //res.json({message: 'Successfully deleted'});
+
+      //req.method = "GET";
+
+      //res.send('/polls');
+
+      //res.redirect(301, 'pages/polls/index.ejs',{
+       //  user:req.user
+        // });
+
+      console.log('Ppoll successfully removed from polls collection!');
+      res.status(200).send();
+
+
+      });
+  });
+
+
+
   app.get('/poll/:id', function (req, res) {
     var id = req.params.id;
     Poll.findById({_id: id}, function (err, poll) {
@@ -86,19 +112,17 @@ module.exports = function(app, passport) {
 
   app.post('/poll/:id', function (req, res) {
     var id = req.params.id;
+    console.log("Logged in? ", isLoggedIn);
 
-    newOption = req.body.newOption.trim();
-    console.log(typeof(newOption));
-
-    //Add new option field is not blank
-    if (newOption !== "") {
+      if (req.body.newOption) {
       //TODO: add else condition for radio ch
       Poll.findOneAndUpdate({
         _id: id
       }, {
         '$push': {
           options: {
-            desc: newOption,
+            //desc: newOption,
+            desc: req.body.newOption.trim(),
             votes: 1
           }
         }

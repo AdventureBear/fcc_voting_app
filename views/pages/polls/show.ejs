@@ -19,8 +19,16 @@
                 <input type="text" name="newOption" placeholder="New Option" value=""><br>
                 <% } %>
 
-                <input class = "btn btn-danger" type="submit" value="Vote">
+                <input class = "btn btn-success" type="submit" value="Vote">
+
                 </form>
+
+                <% if (user && parseInt(user._id) === parseInt(poll.ownerID)) { %>
+                    <a href="/poll/<%= poll._id %>"><button id = "del-btn" class="btn btn-danger">Delete</button></a>
+                <% } %>
+
+
+
         </div>
 
         <div class="col-md-8">
@@ -74,7 +82,21 @@
 <footer>
     <% include ../../partials/footer %>
 </footer>
+<script>
+        var del_btn = document.getElementById("del-btn");
+        del_btn.addEventListener("click", function(e) {
+            window.location.href = "/polls";
+            console.log("response text", this.responseText);
+            var poll = <%- JSON.stringify(poll) %>;
+            var oReq = new XMLHttpRequest();
+            oReq.open("DELETE", "/poll/" + poll._id);
+           //
+            oReq.send();
 
+
+            //make XMLHttpRequest to delete the poll here
+        }, false);
+</script>
 
 </body>
 </html>

@@ -1,6 +1,6 @@
 <!-- views/partials/header.ejs -->
 
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
 
         <div class="navbar-header">
@@ -13,7 +13,7 @@
         <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
-            <li><a href="/polls">Polls</a></li>
+            <li><a href="/polls">Polls <span class="badge"><% if (user) { %> 4 <% } %></span></a></li>
         </ul>
 
 
