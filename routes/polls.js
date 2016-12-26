@@ -66,6 +66,11 @@ module.exports = function(app, passport) {
       if (err) return console.error(err);
       console.log("Poll saved!");
     });
+
+    res.render('pages/polls/show.ejs', {
+      poll: poll,
+      user: req.user
+    });
     res.json(poll + " Saved");
 
   });
@@ -77,17 +82,8 @@ module.exports = function(app, passport) {
     }, function(err, poll){
       if (err)
         return console.error(err);
-      //res.json({message: 'Successfully deleted'});
 
-      //req.method = "GET";
-
-      //res.send('/polls');
-
-      //res.redirect(301, 'pages/polls/index.ejs',{
-       //  user:req.user
-        // });
-
-      console.log('Ppoll successfully removed from polls collection!');
+      console.log('Poll successfully removed from polls collection!');
       res.status(200).send();
 
 
@@ -115,7 +111,7 @@ module.exports = function(app, passport) {
     console.log("Logged in? ", isLoggedIn);
 
       if (req.body.newOption) {
-      //TODO: add else condition for radio ch
+
       Poll.findOneAndUpdate({
         _id: id
       }, {

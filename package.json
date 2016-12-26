@@ -1,7 +1,7 @@
 {
   "name": "fccVote2",
   "version": "1.0.0",
-  "description": "Polls & Users",
+  "description": "FCC Voting App for Full Stack projects",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
