@@ -53,7 +53,29 @@ module.exports = function(app, passport) {
   });
 
 
-  app.post('/poll/new', function (req, res) {
+  //app.post('/poll/new', function (req, res) {
+  //  var poll = new Poll();
+  //  poll.title = req.body.pollTitle.trim();  //to trim or not?
+  //  req.body.pollAnswers.split(",").forEach(function (answer) {
+  //    obj = {desc: answer.trim(), votes: 0, addedBy: User._id};
+  //    poll.options.push(obj);
+  //  });
+  //  poll.ownerID = req.user._id;
+  //
+  //  poll.save(function (err, poll) {
+  //    if (err) return console.error(err);
+  //    console.log("Poll saved!");
+  //  });
+  //
+  //  res.redirect('/polls', {
+  //    poll: poll,
+  //    user: req.user
+  //  });
+  //  res.json(poll + " Saved");
+  //
+  //});
+
+  app.post('/poll', function (req, res) {
     var poll = new Poll();
     poll.title = req.body.pollTitle.trim();  //to trim or not?
     req.body.pollAnswers.split(",").forEach(function (answer) {
@@ -64,14 +86,20 @@ module.exports = function(app, passport) {
 
     poll.save(function (err, poll) {
       if (err) return console.error(err);
-      console.log("Poll saved!");
+
+      var urlString = '/poll/' + poll._id;
+      console.log("Poll ", poll._id, " saved!");
+      res.render('pages/polls/show.ejs', {
+        poll: poll,
+        user: req.user
+      });
     });
 
-    res.render('pages/polls/show.ejs', {
-      poll: poll,
-      user: req.user
-    });
-    res.json(poll + " Saved");
+    //res.redirect(200, '/poll'+ newID, {
+    //     poll: poll,
+    //      user: req.user
+    //    });
+    //res.json(poll + " Saved");
 
   });
 
