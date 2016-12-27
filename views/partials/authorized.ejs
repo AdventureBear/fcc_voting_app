@@ -1,9 +1,13 @@
 <!-- views/partials/authorized.ejs -->
 <!-- displays new poll & my poll options if logged in-->
-<div class="container">
-    <div class="jumbotron">
-        <h2><span class="fa fa-tasks"></span>Polls Main Page</h2>
 
+<div class="jumbotron text-center">
+    <h1><span class="fa fa-pie-chart"></span>Votease </h1>
+    <h2>A Fullstack Project for Free Code Camp</h2>
+</div>
+`
+<div class="container">
+    <div class="text-center">
         <a href="/polls"><button class="btn btn-default btn-sm">All Polls</button></a>
         <% if (!user) { %>
         <a href="/"><button class="btn btn-default btn-sm">Register</button></a>
