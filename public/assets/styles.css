@@ -1,6 +1,16 @@
 .navbar {
 
-    /*background-color: #007c9a;*/
+    background-color: #174f00;
 }
 
+div.jumbotron {
+    background-color: blanchedalmond;
+}
 
+a {
+    color: #174f00;
+}
+
+.navbar-inverse .navbar-nav>li>a, .navbar-inverse .navbar-brand  {
+    color: #ffebcd;
+}

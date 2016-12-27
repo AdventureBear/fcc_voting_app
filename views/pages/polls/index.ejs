@@ -6,22 +6,25 @@
     <% include ../../partials/header %>
 </header>
 
+<% include ../../partials/authorized %>
 
-<div class="container">
-    <div class="page-header text-center">
-        <h1><span class="fa fa-tasks"></span>Polls Main Page</h1>
+        <!--<h1><span class="fa fa-tasks"></span>Polls Main Page</h1>-->
 
 
-        <a href="/polls"><button class="btn btn-default btn-sm">All Polls</button></a>
-        <% if (!user) { %>
-        <a href="/"><button class="btn btn-default btn-sm">Register to Make Your Own Poll</button></a>
-        <% } else  { %>
-        <a href="/poll/user/<%= user._id %>"><button class="btn btn-default btn-sm">My Polls</button></a>
-        <% } %>
+        <!--<a href="/polls"><button class="btn btn-default btn-sm">All Polls</button></a>-->
+        <!--<% if (!user) { %>-->
+        <!--<a href="/"><button class="btn btn-default btn-sm">Register to Make Your Own Poll</button></a>-->
+        <!--<% } else  { %>-->
+        <!--<a href="/poll/user/<%= user._id %>"><button class="btn btn-default btn-sm">My Polls</button></a>-->
+        <!--<% } %>-->
 
-        <a href="/poll/new" class="btn btn-default btn-sm">New Poll</a>
+        <!--<a href="/poll/new" class="btn btn-default btn-sm">New Poll</a>-->
+        <!-- -->
 
-        <div class="all-polls">
+        <div class="container">
+
+
+            <div class=".col-md-6 .col-md-offset-3">
             <h2>All Polls</h2>
             <table>
                 <tr><th>Title</th><th>Author</th></tr>
@@ -48,7 +51,7 @@
 
 
 
-    </div>
+
 
 </div>
 <footer>

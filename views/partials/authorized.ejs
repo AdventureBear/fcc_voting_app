@@ -1,0 +1,15 @@
+<!-- views/partials/authorized.ejs -->
+<!-- displays new poll & my poll options if logged in-->
+<div class="container">
+    <div class="jumbotron">
+        <h2><span class="fa fa-tasks"></span>Polls Main Page</h2>
+
+        <a href="/polls"><button class="btn btn-default btn-sm">All Polls</button></a>
+        <% if (!user) { %>
+        <a href="/"><button class="btn btn-default btn-sm">Register</button></a>
+        <% } else  { %>
+        <a href="/poll/user/<%= user._id %>"><button class="btn btn-default btn-sm">My Polls</button></a>
+        <% } %>
+        <a href="/poll/new" class="btn btn-default btn-sm">New Poll</a>
+    </div>
+</div>

@@ -53,6 +53,7 @@ module.exports = function(app, passport) {
   });
 
 
+
   //app.post('/poll/new', function (req, res) {
   //  var poll = new Poll();
   //  poll.title = req.body.pollTitle.trim();  //to trim or not?
@@ -207,5 +208,5 @@ function isLoggedIn(req, res, next) {
     return next();
 
   // if they aren't redirect them to the polls page
-  res.redirect('/polls');
+  res.redirect('/');
 }
