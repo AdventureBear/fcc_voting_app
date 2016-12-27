@@ -19,6 +19,10 @@ app.use(morgan('dev')); //log every request to console
 app.use(cookieParser()); //read cookies
 app.use(bodyParser()); //read forms
 
+//serve-favicon
+var favicon = require('serve-favicon');
+app.use(favicon(__dirname + '/public/assets/favicon.ico'));
+
 //serve public files from public folder
 app.use('/public', express.static('public'));
 app.use('/client',express.static('bower_components'));
