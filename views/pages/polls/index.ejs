@@ -14,13 +14,13 @@
         <div class="col-xs-12 col-md-8">
             <h2>All Polls</h2>
             <table>
-                <tr><th>Title</th><th>Author</th></tr>
+                <tr><th>Title</th><th>ID</th><th>Author</th></tr>
                 <% console.log(owners)%>
                 <% polls.forEach(function(poll, i) { %>
                 <tr>
                     <td> <a href="/poll/<%= poll._id %> "> <%= poll.title %></a></td>
-                    <!--<td><a href="/user/<%= poll.ownerID %> "> <%= poll.ownerID %></a></td>-->
-                    <td><a href="/user/<%= poll.ownerID %> "> <%= owners[i].name %></a></td>
+                    <td><a href="/user/<%= poll.ownerID %> "> <%= poll.ownerID %></a></td>
+                    <td><a href="/user/<%= poll.ownerID %> "> <%= i %></a></td>
                 </tr>
                 <% }); %>
             </table>

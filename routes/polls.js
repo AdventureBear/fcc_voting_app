@@ -42,7 +42,6 @@ module.exports = function(app, passport) {
         });
 
 
-
         Poll.find({
           ownerID: req.user_id
         }, function (err, myPolls) {
@@ -53,7 +52,7 @@ module.exports = function(app, passport) {
             polls: polls,
             myPolls: myPolls,
             user : req.user,
-            owners: ownersArray// get the user out of session and pass to template
+            owners: ownersArray // get the user out of session and pass to template
           }); // load the index.ejs file
         });
       });
