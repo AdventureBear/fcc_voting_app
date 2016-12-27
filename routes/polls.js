@@ -12,23 +12,52 @@ module.exports = function(app, passport) {
   // POLL HOME PAGE () ========
   // =====================================
   app.get('/polls', function (req, res) {
-
+      var name = "";
+      var ownersArray = [];
       Poll.find({}, function (err, polls) {
         if (err) return console.error(err);
+
+        polls.forEach(function(poll){
+          User.find({
+            _id: poll.ownerID
+          }, function(err, owners){
+
+            owners.forEach(function(owner) {
+              //console.log(poll.title, poll.ownerID, owner[0].google);
+              if (owner.google.token) {
+                name = owner.google.name.split(" ")[0]
+              } else if (owner.facebook.token) {
+                name = owner.facebook.name.split(" ")[0]
+              } else {
+                name = "@" + owner.local.email.split("@")[0]
+              }
+              console.log(poll.title, poll.ownerID, name);
+              ownersArray.push({"id": poll.ownerID, "name": name})
+            });
+
+
+          });
+
+
+        });
+
+
 
         Poll.find({
           ownerID: req.user_id
         }, function (err, myPolls) {
           if (err) return console.error(err);
 
-          console.log(polls, myPolls);
+          //console.log(polls, myPolls);
           res.render('pages/polls/index.ejs', {
             polls: polls,
             myPolls: myPolls,
-            user : req.user  // get the user out of session and pass to template
+            user : req.user,
+            owners: ownersArray// get the user out of session and pass to template
           }); // load the index.ejs file
         });
       });
+
   });
 
   app.get('/poll/user/:id', function(req,res){
@@ -51,30 +80,6 @@ module.exports = function(app, passport) {
       user: req.user
     }); // form to add a new poll
   });
-
-
-
-  //app.post('/poll/new', function (req, res) {
-  //  var poll = new Poll();
-  //  poll.title = req.body.pollTitle.trim();  //to trim or not?
-  //  req.body.pollAnswers.split(",").forEach(function (answer) {
-  //    obj = {desc: answer.trim(), votes: 0, addedBy: User._id};
-  //    poll.options.push(obj);
-  //  });
-  //  poll.ownerID = req.user._id;
-  //
-  //  poll.save(function (err, poll) {
-  //    if (err) return console.error(err);
-  //    console.log("Poll saved!");
-  //  });
-  //
-  //  res.redirect('/polls', {
-  //    poll: poll,
-  //    user: req.user
-  //  });
-  //  res.json(poll + " Saved");
-  //
-  //});
 
   app.post('/poll', function (req, res) {
     var poll = new Poll();

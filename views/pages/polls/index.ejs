@@ -15,10 +15,12 @@
             <h2>All Polls</h2>
             <table>
                 <tr><th>Title</th><th>Author</th></tr>
-                <% polls.forEach(function(poll) { %>
+                <% console.log(owners)%>
+                <% polls.forEach(function(poll, i) { %>
                 <tr>
                     <td> <a href="/poll/<%= poll._id %> "> <%= poll.title %></a></td>
-                    <td><a href="/user/<%= poll.ownerID %> "> <%= poll.ownerID %></a></td>
+                    <!--<td><a href="/user/<%= poll.ownerID %> "> <%= poll.ownerID %></a></td>-->
+                    <td><a href="/user/<%= poll.ownerID %> "> <%= owners[i].name %></a></td>
                 </tr>
                 <% }); %>
             </table>
