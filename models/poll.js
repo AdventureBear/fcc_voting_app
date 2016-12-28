@@ -5,11 +5,13 @@ var Schema = mongoose.Schema;
 
 //create a schema
 var optionsSchema = new Schema({desc: String, votes: Number, addedBy: Schema.Types.ObjectId});
+var votesSchema = new Schema({voterID: Schema.Types.ObjectId, optionID: Schema.Types.ObjectId});
 var pollSchema = new Schema({
   title: {type: String, required: true},
   options: [optionsSchema],
-  ownerID: {type: Schema.Types.ObjectId, required: false}
-
+  votes: [votesSchema],
+  ownerID: {type: Schema.Types.ObjectId, required: false},
+  ownerName: {type: String, required: false}
 },{
   timestamps: true
 });

@@ -11,6 +11,7 @@ module.exports = function(app, passport) {
   // =====================================
   // POLL HOME PAGE () ========
   // =====================================
+  // Everyone should be able to access this route
   app.get('/polls', function (req, res) {
       var name = "";
       var ownersArray = [];
@@ -59,7 +60,8 @@ module.exports = function(app, passport) {
 
   });
 
-  app.get('/poll/user/:id', function(req,res){
+  //Only logged in users should be able to access this route (for now)
+  app.get('/poll/user/:id', isLoggedIn, function(req,res){
     console.log(req.params.id);
 
     Poll.find({
@@ -73,14 +75,15 @@ module.exports = function(app, passport) {
     });
   });
 
-
+  //Only accessible by logged in users
   app.get('/poll/new', isLoggedIn, function (req, res) {
     res.render('pages/polls/add.ejs', {
       user: req.user
     }); // form to add a new poll
   });
 
-  app.post('/poll', function (req, res) {
+  //ONly accessible by logged in users
+  app.post('/poll', isLoggedIn, function (req, res) {
     var poll = new Poll();
     poll.title = req.body.pollTitle.trim();  //to trim or not?
     req.body.pollAnswers.split(",").forEach(function (answer) {
@@ -88,43 +91,40 @@ module.exports = function(app, passport) {
       poll.options.push(obj);
     });
     poll.ownerID = req.user._id;
+    poll.ownerName = getNameFromUser(req);
 
     poll.save(function (err, poll) {
       if (err) return console.error(err);
 
       var urlString = '/poll/' + poll._id;
-      console.log("Poll ", poll._id, " saved!");
+      console.log("Poll ", poll._id, " saved, Owner's name: ", poll.ownerName);
       res.render('pages/polls/show.ejs', {
         poll: poll,
         user: req.user
       });
     });
+  });
 
-    //res.redirect(200, '/poll'+ newID, {
-    //     poll: poll,
-    //      user: req.user
-    //    });
-    //res.json(poll + " Saved");
+  //Only accessible by logged in users AND
+  //Only accessible by owner of poll
+  app.delete('/poll/:id', isLoggedIn, function(req,res){
+          Poll.remove({
+            _id: req.params.id,
+            ownerID: req.user._id
+          }, function (err, poll) {
+            if (err)
+              return console.error(err);
+
+            console.log('Poll successfully removed from polls collection!');
+            res.status(200).send();
+
+
+          });
 
   });
 
-  app.delete('/poll/:id', function(req,res){
-    //var id = req.params.id;
-    Poll.remove({
-      _id: req.params.id
-    }, function(err, poll){
-      if (err)
-        return console.error(err);
 
-      console.log('Poll successfully removed from polls collection!');
-      res.status(200).send();
-
-
-      });
-  });
-
-
-
+  //All users
   app.get('/poll/:id', function (req, res) {
     var id = req.params.id;
     Poll.findById({_id: id}, function (err, poll) {
@@ -139,6 +139,7 @@ module.exports = function(app, passport) {
 
   });
 
+  //Voting accessible by all
   app.post('/poll/:id', function (req, res) {
     var id = req.params.id;
     console.log("Logged in? ", isLoggedIn);
@@ -188,20 +189,21 @@ module.exports = function(app, passport) {
 
   });
 
-  app.get('/results/:id', function (req, res) {
-    var id = req.params.id;
-    Poll.findById({_id: id}, function (err, poll) {
-      if (err) return console.error(err);
-      console.log(poll);
-      //res.json(poll);
-      res.render('pages/polls/show.ejs', {
-        poll: poll,
-        user: req.user
-      });
-      //res.send(poll);
-    });
 
-  });
+  //app.get('/results/:id', function (req, res) {
+  //  var id = req.params.id;
+  //  Poll.findById({_id: id}, function (err, poll) {
+  //    if (err) return console.error(err);
+  //    console.log(poll);
+  //    //res.json(poll);
+  //    res.render('pages/polls/show.ejs', {
+  //      poll: poll,
+  //      user: req.user
+  //    });
+  //    //res.send(poll);
+  //  });
+
+  //});
 
 };
 
@@ -213,4 +215,14 @@ function isLoggedIn(req, res, next) {
 
   // if they aren't redirect them to the polls page
   res.redirect('/');
+}
+
+function getNameFromUser(req){
+  if (req.user.google.token) {
+    return req.user.google.name.split(" ")[0];
+  } else if (req.user.facebook.token) {
+    return req.user.facebook.name.split(" ")[0];
+  } else {
+    return "@" + req.user.local.email.split("@")[0];
+  }
 }
