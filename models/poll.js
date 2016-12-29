@@ -4,8 +4,16 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 //create a schema
-var optionsSchema = new Schema({desc: String, votes: Number, addedBy: Schema.Types.ObjectId});
-var votesSchema = new Schema({voterID: Schema.Types.ObjectId, optionID: Schema.Types.ObjectId});
+var optionsSchema = new Schema({
+  desc: String,
+  votes: Number,
+  addedBy: Schema.Types.ObjectId
+});
+var votesSchema = new Schema({
+  voterID: Schema.Types.ObjectId,
+  option: String,
+  voterIP: String
+});
 var pollSchema = new Schema({
   title: {type: String, required: true},
   options: [optionsSchema],

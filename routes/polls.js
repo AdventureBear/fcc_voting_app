@@ -82,7 +82,7 @@ module.exports = function(app, passport) {
     }); // form to add a new poll
   });
 
-  //ONly accessible by logged in users
+  //Only accessible by logged in users
   app.post('/poll', isLoggedIn, function (req, res) {
     var poll = new Poll();
     poll.title = req.body.pollTitle.trim();  //to trim or not?
@@ -141,8 +141,18 @@ module.exports = function(app, passport) {
 
   //Voting accessible by all
   app.post('/poll/:id', function (req, res) {
+    //Log IP address if guest,
+    //Log user ID if authenticated
+    if (req.isAuthenticated()){
+      var voterID = req.user._id;
+      var voterIP = null;
+    } else{
+      var voterID = null;
+      var voterIP = req.ip;
+    }
+
     var id = req.params.id;
-    console.log("Logged in? ", isLoggedIn);
+    //console.log("Logged in? ", isLoggedIn);
 
       if (req.body.newOption) {
 
@@ -154,8 +164,15 @@ module.exports = function(app, passport) {
             //desc: newOption,
             desc: req.body.newOption.trim(),
             votes: 1
+          },
+          votes: {
+            voterID: voterID,
+            voterIP: voterIP,
+            option: req.body.newOption.trim()
           }
         }
+
+
       }, {
         new: true
       }, function (err, poll) {
@@ -170,11 +187,22 @@ module.exports = function(app, passport) {
       })
     }   else if (req.body.option) {
         var option = req.body.option.trim();
-        Poll.findOneAndUpdate(
-          {_id: id, 'options.desc': option},
-          {$inc: {'options.$.votes': 1}},
-          {new: true},
-          function (err, poll) {
+        Poll.findOneAndUpdate({
+            _id: id, 'options.desc': option
+          }, {
+            $inc: {
+              'options.$.votes': 1
+            },
+            $push: {
+              votes: {
+                voterID: voterID,
+                voterIP: voterIP,
+                option: option
+              }
+            }
+          }, {
+            new: true
+          }, function (err, poll) {
             if (err) return console.log(err);
             console.log("Poll: ", poll);
             res.render('pages/polls/show.ejs', {
