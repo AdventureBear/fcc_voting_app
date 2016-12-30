@@ -5,8 +5,13 @@
     <% include ../partials/header %>
 </header>
 
+<% include ../partials/authorized %>
+
 <div class="container">
-    <div class="jumbotron page-header text-center"><h2><span class="fa fa-anchor"></span> Dashboard Page</h2>
+
+
+    <div class="page-header text-center">
+        <h2><span class="fa fa-anchor"></span> Dashboard Page</h2>
 
         <a href="/poll/user/<%= user._id %> " class="btn btn-default btn-sm">My Polls</a>
         <a href="/profile" class="btn btn-default btn-sm">My Profile</a>

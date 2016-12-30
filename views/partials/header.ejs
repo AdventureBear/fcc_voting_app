@@ -18,17 +18,24 @@
 
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/dashboard">Welcome,
-                    <% if (!user) { %>
-                Guest
-            <% } else if (user.google.token) { %>
-                 <%= user.google.name.split(" ")[0] %>
-            <% } else if (user.facebook.token) { %>
-                <%= user.facebook.name.split(" ")[0] %>
-            <% } else {%>
+            <% if (!user) { %>
+                    <li><a href="/profile">Welcome, Guest</li></a>
+            <% } else { %>
+                <li><a href="/profile">Welcome,
+                 <% if (user.google.token) { %>
+                     <%= user.google.name.split(" ")[0] %>
+                <% } else if (user.facebook.token) { %>
+                    <%= user.facebook.name.split(" ")[0] %>
+                <% } else { %>
                     <%= user.local.email %>
-                    <% } %>
-            </a></li>
+                <% } %>
+
+                </a></li>
+                <li><a href="/logout" class="btn btn-default btn-sm">Logout</a></li>
+
+            <% }%>
+
+
         </ul>
 
     </div>
