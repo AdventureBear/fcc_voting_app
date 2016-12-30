@@ -141,97 +141,213 @@ module.exports = function(app, passport) {
 
   //Voting accessible by all
   app.post('/poll/:id', function (req, res) {
+    var id = req.params.id;
+    var voterIP = req.ip;
+
     //Log IP address if guest,
     //Log user ID if authenticated
-    if (req.isAuthenticated()){
+    if (req.isAuthenticated()) {
       var voterID = req.user._id;
-      var voterIP = null;
-    } else{
-      var voterID = null;
-      var voterIP = req.ip;
-    }
 
-    var id = req.params.id;
-    //console.log("Logged in? ", isLoggedIn);
-
-      if (req.body.newOption) {
-
-      Poll.findOneAndUpdate({
-        _id: id
-      }, {
-        '$push': {
-          options: {
-            //desc: newOption,
-            desc: req.body.newOption.trim(),
-            votes: 1
-          },
-          votes: {
-            voterID: voterID,
-            voterIP: voterIP,
-            option: req.body.newOption.trim()
+      //Find poll & check for vote
+      Poll.count({_id: id, 'votes.voterID': voterID}, function (err, c){
+        console.log("Authenticated User, Count is ", c);
+        if (c===0) {
+          console.log("User is able to vote!");
+          //If able to vote, check for newOption or existing option
+          if (req.body.newOption) {
+            //user entered a new Option, add it to poll object & add 1 vote
+            //log vote by userID (or IP for guest)
+            Poll.findOneAndUpdate({
+              _id: id
+            }, {
+              '$push': {
+                options: {
+                  //desc: newOption,
+                  desc: req.body.newOption.trim(),
+                  votes: 1
+                },
+                votes: {
+                  voterID: voterID,
+                  voterIP: voterIP,
+                  option: req.body.newOption.trim()
+                }
+              }
+            }, {
+              new: true
+            }, function (err, poll) {
+              if (err) return console.log(err);
+              res.render('pages/polls/show.ejs', {
+                user: req.user,
+                poll: poll
+              });
+            })
+          } else if (req.body.option) {
+            var option = req.body.option.trim();
+            Poll.findOneAndUpdate({
+              _id: id, 'options.desc': option
+            }, {
+              $inc: {
+                'options.$.votes': 1
+              },
+              $push: {
+                votes: {
+                  voterID: voterID,
+                  voterIP: voterIP,
+                  option: option
+                }
+              }
+            }, {
+              new: true
+            }, function (err, poll) {
+              if (err) return console.log(err);
+              //console.log("Poll: ", poll);
+              res.render('pages/polls/show.ejs', {
+                poll: poll,
+                user: req.user
+              });
+            })
+          } else {
+            res.redirect('/poll/' + id);
           }
+        } else {
+          console.log("User is unable to vote");
+          res.redirect('/poll/' + id);
+        }
+
+      })
+    } else {
+      //Guest, check IP logging to see if able to vote, then log IP address
+      Poll.count({_id: id, 'votes.voterIP': voterIP}, function (err, c){
+        if (err) console.error(err);
+        console.log("Guest user, count of votes is: ", c);
+        if (c===0) {
+          console.log("Guest is able to vote!");
+          //If able to vote, check for newOption or existing option
+          if (req.body.newOption) {
+            //user entered a new Option, add it to poll object & add 1 vote
+            //log vote by userID (or IP for guest)
+            Poll.findOneAndUpdate({
+              _id: id
+            }, {
+              '$push': {
+                options: {
+                  //desc: newOption,
+                  desc: req.body.newOption.trim(),
+                  votes: 1
+                },
+                votes: {
+                  voterIP: voterIP,
+                  option: req.body.newOption.trim()
+                }
+              }
+            }, {
+              new: true
+            }, function (err, poll) {
+              if (err) return console.log(err);
+              res.render('pages/polls/show.ejs', {
+                user: req.user,
+                poll: poll
+              });
+            })
+          } else if (req.body.option) {
+            var option = req.body.option.trim();
+            Poll.findOneAndUpdate({
+              _id: id, 'options.desc': option
+            }, {
+              $inc: {
+                'options.$.votes': 1
+              },
+              $push: {
+                votes: {
+                  voterIP: voterIP,
+                  option: option
+                }
+              }
+            }, {
+              new: true
+            }, function (err, poll) {
+              if (err) return console.log(err);
+              //console.log("Poll: ", poll);
+              res.render('pages/polls/show.ejs', {
+                poll: poll,
+                user: req.user
+              });
+            })
+          } else {
+            res.redirect('/poll/' + id);
+          }
+        } else {
+          console.log("User is unable to vote");
+          res.redirect('/poll/' + id);
         }
 
 
-      }, {
-        new: true
-      }, function (err, poll) {
-        if (err) return console.log(err);
-        console.log(poll);
-        res.render('pages/polls/show.ejs', {
-          user: req.user,
-          poll: poll
-        });
-        //TODO:  place cookie to prevent repeat voting
-
       })
-    }   else if (req.body.option) {
-        var option = req.body.option.trim();
-        Poll.findOneAndUpdate({
-            _id: id, 'options.desc': option
-          }, {
-            $inc: {
-              'options.$.votes': 1
-            },
-            $push: {
-              votes: {
-                voterID: voterID,
-                voterIP: voterIP,
-                option: option
-              }
-            }
-          }, {
-            new: true
-          }, function (err, poll) {
-            if (err) return console.log(err);
-            console.log("Poll: ", poll);
-            res.render('pages/polls/show.ejs', {
-              poll: poll,
-              user: req.user
-            });
-            //TODO:  place cookie to prevent repeat voting
-          })
-      }  else {
-      res.redirect('/poll/'+ id);
+
+
     }
 
+
+
+    ////If able to vote, check for newOption or existing option
+    //  if (req.body.newOption) {
+    //
+    //    Poll.findOneAndUpdate({
+    //      _id: id
+    //    }, {
+    //      '$push': {
+    //        options: {
+    //          //desc: newOption,
+    //          desc: req.body.newOption.trim(),
+    //          votes: 1
+    //        },
+    //        votes: {
+    //          voterID: voterID,
+    //          voterIP: voterIP,
+    //          option: req.body.newOption.trim()
+    //        }
+    //      }
+    //    }, {
+    //      new: true
+    //    }, function (err, poll) {
+    //      if (err) return console.log(err);
+    //      res.render('pages/polls/show.ejs', {
+    //        user: req.user,
+    //        poll: poll
+    //      });
+    //    })
+    //  } else if (req.body.option) {
+    //    var option = req.body.option.trim();
+    //    Poll.findOneAndUpdate({
+    //      _id: id, 'options.desc': option
+    //    }, {
+    //      $inc: {
+    //        'options.$.votes': 1
+    //      },
+    //      $push: {
+    //        votes: {
+    //          voterID: voterID,
+    //          voterIP: voterIP,
+    //          option: option
+    //        }
+    //      }
+    //    }, {
+    //      new: true
+    //    }, function (err, poll) {
+    //      if (err) return console.log(err);
+    //      //console.log("Poll: ", poll);
+    //      res.render('pages/polls/show.ejs', {
+    //        poll: poll,
+    //        user: req.user
+    //      });
+    //      //TODO:  place cookie to prevent repeat voting
+    //    })
+    //  } else {
+    //    res.redirect('/poll/' + id);
+    //  }
+
   });
-
-
-  //app.get('/results/:id', function (req, res) {
-  //  var id = req.params.id;
-  //  Poll.findById({_id: id}, function (err, poll) {
-  //    if (err) return console.error(err);
-  //    console.log(poll);
-  //    //res.json(poll);
-  //    res.render('pages/polls/show.ejs', {
-  //      poll: poll,
-  //      user: req.user
-  //    });
-  //    //res.send(poll);
-  //  });
-
-  //});
 
 };
 
@@ -254,3 +370,4 @@ function getNameFromUser(req){
     return "@" + req.user.local.email.split("@")[0];
   }
 }
+
